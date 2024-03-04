@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using NorthwindRestApi.Models;
 
 namespace NorthwindRestApi.Models
 {
@@ -847,5 +848,7 @@ namespace NorthwindRestApi.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<NorthwindRestApi.Models.Documentation>? Documentation { get; set; }
     }
 }
