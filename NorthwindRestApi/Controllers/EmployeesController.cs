@@ -52,32 +52,34 @@ namespace NorthwindRestApi.Controllers
         // PUT: api/Employees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, Employee employee)
+        public ActionResult EditEmployees(string id, [FromBody] Employee employee)
         {
-            if (id != employee.EmployeeId)
+            var employees = db.Employees.Find(id);
+            if (employee != null)
             {
-                return BadRequest();
+
+                employee.LastName = employees.LastName;
+                employee.FirstName = employees.FirstName;
+                employee.Title = employees.Title;
+                employee.BirthDate = employees.BirthDate;
+                employee.HireDate = employees.HireDate;
+                employee.Address = employees.Address;
+                employee.City = employees.City;
+                employee.Region = employees.Region;
+                employee.PostalCode = employees.PostalCode;
+                employee.Country = employees.Country;
+                employee.HomePhone = employees.HomePhone;
+                employee.Extension = employees.Extension;
+                employee.Photo = employees.Photo;
+                employee.Notes = employees.Notes;
+                employee.PhotoPath = employees.PhotoPath;
+
+                db.SaveChanges();
+                return Ok("Muokattu tietoja" + employee.LastName);
+
             }
 
-            _context.Entry(employee).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EmployeeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return NotFound("työntekijää ei löytynyt id:llä" + id);
         }
 
         // POST: api/Employees

@@ -52,32 +52,26 @@ namespace NorthwindRestApi.Controllers
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
+        public ActionResult EditProduct(string id, [FromBody] Product product)
         {
-            if (id != product.ProductId)
+            var products = db.Products.Find(id);
+            if (product != null)
             {
-                return BadRequest();
+
+                product.ProductName = product.ProductName;
+                product.QuantityPerUnit = product.QuantityPerUnit;
+                product.UnitPrice = product.UnitPrice;
+                product.UnitsInStock = product.UnitsInStock;
+                product.UnitsOnOrder = product.UnitsOnOrder;
+                product.ReorderLevel = product.ReorderLevel;
+                product.Discontinued = product.Discontinued;
+
+                db.SaveChanges();
+                return Ok("Muokattu asiakastietoja" + product.ProductName);
+
             }
 
-            _context.Entry(product).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return NotFound("Asiakasta ei löytynyt id:llä" + id);
         }
 
         // POST: api/Products
